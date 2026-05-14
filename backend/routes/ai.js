@@ -211,6 +211,76 @@ router.post('/generate-scene', auth, async (req, res) => {
   }
 });
 
+// Style recommendation engine
+router.post('/style-recommend', auth, async (req, res) => {
+  try {
+    const { brand, industry, target_audience, content_type, mood } = req.body;
+    const response = await axios.post(
+      `${process.env.OPENROUTER_BASE_URL}/chat/completions`,
+      {
+        model: process.env.OPENROUTER_MODEL,
+        messages: [
+          { role: 'system', content: 'You are an art director recommending visual styles for AI-generated video. Always respond with valid JSON.' },
+          { role: 'user', content: `Recommend visual styles for this project:\nBrand: ${brand || 'unknown'}\nIndustry: ${industry || 'unknown'}\nTarget audience: ${target_audience || 'general'}\nContent type: ${content_type || 'social'}\nMood: ${mood || 'unspecified'}\n\nReturn JSON: { "recommendations": [{ "styleName": "", "description": "", "colorPalette": ["#hex", "#hex"], "lighting": "", "cameraStyle": "", "promptKeywords": ["..."] }], "summary": "" }` }
+        ],
+        temperature: 0.7,
+        max_tokens: 1500,
+        response_format: { type: 'json_object' }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'http://localhost:3000',
+          'X-Title': 'AI Video Generation Platform',
+        }
+      }
+    );
+    const content = response.data.choices?.[0]?.message?.content;
+    let parsed = null;
+    try { parsed = JSON.parse(content); } catch (_) {}
+    res.json({ recommendations: parsed, raw: content, model: response.data.model, usage: response.data.usage });
+  } catch (err) {
+    console.error('Style Error:', err.response?.data || err.message);
+    res.status(500).json({ error: err.response?.data?.error?.message || err.message });
+  }
+});
+
+// Viral score prediction
+router.post('/viral-score', auth, async (req, res) => {
+  try {
+    const { title, hook, description, platform, length_seconds, content_type } = req.body;
+    const response = await axios.post(
+      `${process.env.OPENROUTER_BASE_URL}/chat/completions`,
+      {
+        model: process.env.OPENROUTER_MODEL,
+        messages: [
+          { role: 'system', content: 'You are a social-media analyst predicting video virality. Always respond with valid JSON.' },
+          { role: 'user', content: `Score the viral potential of this video concept on ${platform || 'short-form video platforms'}:\nTitle: ${title || ''}\nHook: ${hook || ''}\nDescription: ${description || ''}\nLength: ${length_seconds || 'unknown'}s\nContent type: ${content_type || 'unknown'}\n\nReturn JSON: { "viralScore": 0, "scoreLabel": "low|medium|high", "strengths": ["..."], "weaknesses": ["..."], "improvements": ["..."], "platformFit": { "tiktok": 0, "instagram": 0, "youtube": 0 } }` }
+        ],
+        temperature: 0.5,
+        max_tokens: 1500,
+        response_format: { type: 'json_object' }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'http://localhost:3000',
+          'X-Title': 'AI Video Generation Platform',
+        }
+      }
+    );
+    const content = response.data.choices?.[0]?.message?.content;
+    let parsed = null;
+    try { parsed = JSON.parse(content); } catch (_) {}
+    res.json({ score: parsed, raw: content, model: response.data.model, usage: response.data.usage });
+  } catch (err) {
+    console.error('Viral Error:', err.response?.data || err.message);
+    res.status(500).json({ error: err.response?.data?.error?.message || err.message });
+  }
+});
+
 // Conversations
 router.get('/conversations', auth, async (req, res) => {
   try { res.json((await pool.query('SELECT * FROM conversations ORDER BY created_at DESC')).rows); }

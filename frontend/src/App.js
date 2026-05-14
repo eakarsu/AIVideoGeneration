@@ -20,8 +20,26 @@ import ExportsPage from './pages/ExportsPage';
 import PromptsPage from './pages/PromptsPage';
 import SettingsPage from './pages/SettingsPage';
 import AIChatPage from './pages/AIChatPage';
+import StyleRecommendPage from './pages/StyleRecommendPage';
+import ViralScorePage from './pages/ViralScorePage';
 
-import { FiFilm, FiType, FiImage, FiGrid, FiLayers, FiVideo, FiFolder, FiShuffle, FiMusic, FiDroplet, FiClock, FiDownload, FiEdit3, FiSettings, FiHome, FiLogOut, FiMenu, FiMessageSquare } from 'react-icons/fi';
+import { FiFilm, FiType, FiImage, FiGrid, FiLayers, FiVideo, FiFolder, FiShuffle, FiMusic, FiDroplet, FiClock, FiDownload, FiEdit3, FiSettings, FiHome, FiLogOut, FiMenu, FiMessageSquare, FiTrendingUp } from 'react-icons/fi';
+// === Batch 08 Gaps & Frontend Mounts ===
+import CfStyleRecommendationEngineByBrandIndustryContent from './pages/CfStyleRecommendationEngineByBrandIndustryContent'
+import CfMusicGenerationMatchingVideoPacingAndTone from './pages/CfMusicGenerationMatchingVideoPacingAndTone'
+import CfVoiceOverSynthesisWithNaturalSpeech from './pages/CfVoiceOverSynthesisWithNaturalSpeech'
+import CfVideoEditingSuggestionsRecommendingCutsTransitions from './pages/CfVideoEditingSuggestionsRecommendingCutsTransitions'
+import CfViralScorePredictionEstimatingContentVirality from './pages/CfViralScorePredictionEstimatingContentVirality'
+import CfCollaborationLayerWithTimecodeAnchoredReviewComments from './pages/CfCollaborationLayerWithTimecodeAnchoredReviewComments'
+import GapNoAiDrivenStyleRecommendation from './pages/GapNoAiDrivenStyleRecommendation'
+import GapNoMusicSoundGeneration from './pages/GapNoMusicSoundGeneration'
+import GapNoAiVoiceOverSynthesisEndpoint from './pages/GapNoAiVoiceOverSynthesisEndpoint'
+import GapLimitedIntegrationWithStockVideoImageLibraries from './pages/GapLimitedIntegrationWithStockVideoImageLibraries'
+import GapNoCollaborationCommentingSystem from './pages/GapNoCollaborationCommentingSystem'
+import GapNoApprovalWorkflowForVideoReview from './pages/GapNoApprovalWorkflowForVideoReview'
+import GapNoDirectPublishToPlatformIntegrationYoutube from './pages/GapNoDirectPublishToPlatformIntegrationYoutube'
+import GapNoWebhooksForRenderCompleteEvents from './pages/GapNoWebhooksForRenderCompleteEvents'
+import GapNoNotificationsSubsystem from './pages/GapNoNotificationsSubsystem'
 
 const menuItems = [
   { path: '/', label: 'Dashboard', icon: FiHome },
@@ -39,6 +57,8 @@ const menuItems = [
   { path: '/exports', label: 'Export Presets', icon: FiDownload },
   { path: '/prompts', label: 'AI Prompts', icon: FiEdit3 },
   { path: '/ai-chat', label: 'AI Assistant', icon: FiMessageSquare },
+  { path: '/style-recommend', label: 'Style Recommend', icon: FiDroplet },
+  { path: '/viral-score', label: 'Viral Score', icon: FiTrendingUp },
   { path: '/settings', label: 'Settings', icon: FiSettings },
 ];
 
@@ -105,7 +125,25 @@ export default function App() {
         <Route path="/exports" element={<ProtectedRoute><ExportsPage /></ProtectedRoute>} />
         <Route path="/prompts" element={<ProtectedRoute><PromptsPage /></ProtectedRoute>} />
         <Route path="/ai-chat" element={<ProtectedRoute><AIChatPage /></ProtectedRoute>} />
+        <Route path="/style-recommend" element={<ProtectedRoute><StyleRecommendPage /></ProtectedRoute>} />
+        <Route path="/viral-score" element={<ProtectedRoute><ViralScorePage /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+      {/* // === Batch 08 Gaps & Frontend Mounts === */}
+      <Route path="/cf-style-recommendation-engine-by-brand-industry-content-type" element={<ProtectedRoute><CfStyleRecommendationEngineByBrandIndustryContent /></ProtectedRoute>} />
+      <Route path="/cf-music-generation-matching-video-pacing-and-tone" element={<ProtectedRoute><CfMusicGenerationMatchingVideoPacingAndTone /></ProtectedRoute>} />
+      <Route path="/cf-voice-over-synthesis-with-natural-speech" element={<ProtectedRoute><CfVoiceOverSynthesisWithNaturalSpeech /></ProtectedRoute>} />
+      <Route path="/cf-video-editing-suggestions-recommending-cuts-transitions" element={<ProtectedRoute><CfVideoEditingSuggestionsRecommendingCutsTransitions /></ProtectedRoute>} />
+      <Route path="/cf-viral-score-prediction-estimating-content-virality" element={<ProtectedRoute><CfViralScorePredictionEstimatingContentVirality /></ProtectedRoute>} />
+      <Route path="/cf-collaboration-layer-with-timecode-anchored-review-comments" element={<ProtectedRoute><CfCollaborationLayerWithTimecodeAnchoredReviewComments /></ProtectedRoute>} />
+      <Route path="/gap-no-ai-driven-style-recommendation" element={<ProtectedRoute><GapNoAiDrivenStyleRecommendation /></ProtectedRoute>} />
+      <Route path="/gap-no-music-sound-generation" element={<ProtectedRoute><GapNoMusicSoundGeneration /></ProtectedRoute>} />
+      <Route path="/gap-no-ai-voice-over-synthesis-endpoint" element={<ProtectedRoute><GapNoAiVoiceOverSynthesisEndpoint /></ProtectedRoute>} />
+      <Route path="/gap-limited-integration-with-stock-video-image-libraries-only" element={<ProtectedRoute><GapLimitedIntegrationWithStockVideoImageLibraries /></ProtectedRoute>} />
+      <Route path="/gap-no-collaboration-commenting-system" element={<ProtectedRoute><GapNoCollaborationCommentingSystem /></ProtectedRoute>} />
+      <Route path="/gap-no-approval-workflow-for-video-review" element={<ProtectedRoute><GapNoApprovalWorkflowForVideoReview /></ProtectedRoute>} />
+      <Route path="/gap-no-direct-publish-to-platform-integration-youtube-tiktok" element={<ProtectedRoute><GapNoDirectPublishToPlatformIntegrationYoutube /></ProtectedRoute>} />
+      <Route path="/gap-no-webhooks-for-render-complete-events" element={<ProtectedRoute><GapNoWebhooksForRenderCompleteEvents /></ProtectedRoute>} />
+      <Route path="/gap-no-notifications-subsystem" element={<ProtectedRoute><GapNoNotificationsSubsystem /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

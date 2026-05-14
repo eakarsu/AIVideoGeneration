@@ -26,6 +26,8 @@ app.use('/api/prompts', require('./routes/prompts'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/video-agents', require('./routes/videoAgents'));
+// Apply pass 5 — backlog: music-gen, voice-over, stock video, publish-to-platform
+app.use('/api/integrations', require('./routes/integrations'));
 
 // Dashboard stats
 const pool = require('./db');
@@ -63,6 +65,19 @@ app.get('/api/dashboard', require('./middleware/auth'), async (req, res) => {
     });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
+
+app.use('/api/style-recommendation', require('./routes/styleRecommendation')); app.use('/api/music-generation', require('./routes/musicGeneration')); app.use('/api/voice-over-synthesis', require('./routes/voiceOverSynthesis')); app.use('/api/video-editing-suggestions', require('./routes/videoEditingSuggestions')); app.use('/api/viral-score-prediction', require('./routes/viralScorePrediction')); app.use('/api/collaboration-layer', require('./routes/collaborationLayer'));
+
+// === Batch 08 Gaps & Frontend Mounts ===
+app.use('/api/gap-no-ai-driven-style-recommendation', require('./routes/gapNoAiDrivenStyleRecommendation'));
+app.use('/api/gap-no-music-sound-generation', require('./routes/gapNoMusicSoundGeneration'));
+app.use('/api/gap-no-ai-voice-over-synthesis-endpoint', require('./routes/gapNoAiVoiceOverSynthesisEndpoint'));
+app.use('/api/gap-limited-integration-with-stock-video-image-libraries-only', require('./routes/gapLimitedIntegrationWithStockVideoImageLibrariesOnly'));
+app.use('/api/gap-no-collaboration-commenting-system', require('./routes/gapNoCollaborationCommentingSystem'));
+app.use('/api/gap-no-approval-workflow-for-video-review', require('./routes/gapNoApprovalWorkflowForVideoReview'));
+app.use('/api/gap-no-direct-publish-to-platform-integration-youtube-tiktok', require('./routes/gapNoDirectPublishToPlatformIntegrationYoutubeTiktok'));
+app.use('/api/gap-no-webhooks-for-render-complete-events', require('./routes/gapNoWebhooksForRenderCompleteEvents'));
+app.use('/api/gap-no-notifications-subsystem', require('./routes/gapNoNotificationsSubsystem'));
 
 app.listen(PORT, () => {
   console.log(`AI Video Generation Backend running on port ${PORT}`);
