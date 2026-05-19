@@ -22,8 +22,9 @@ import SettingsPage from './pages/SettingsPage';
 import AIChatPage from './pages/AIChatPage';
 import StyleRecommendPage from './pages/StyleRecommendPage';
 import ViralScorePage from './pages/ViralScorePage';
+import CustomViewsPage from './pages/CustomViewsPage';
 
-import { FiFilm, FiType, FiImage, FiGrid, FiLayers, FiVideo, FiFolder, FiShuffle, FiMusic, FiDroplet, FiClock, FiDownload, FiEdit3, FiSettings, FiHome, FiLogOut, FiMenu, FiMessageSquare, FiTrendingUp } from 'react-icons/fi';
+import { FiFilm, FiType, FiImage, FiGrid, FiLayers, FiVideo, FiFolder, FiShuffle, FiMusic, FiDroplet, FiClock, FiDownload, FiEdit3, FiSettings, FiHome, FiLogOut, FiMenu, FiMessageSquare, FiTrendingUp, FiBarChart2 } from 'react-icons/fi';
 // === Batch 08 Gaps & Frontend Mounts ===
 import CfStyleRecommendationEngineByBrandIndustryContent from './pages/CfStyleRecommendationEngineByBrandIndustryContent'
 import CfMusicGenerationMatchingVideoPacingAndTone from './pages/CfMusicGenerationMatchingVideoPacingAndTone'
@@ -59,6 +60,7 @@ const menuItems = [
   { path: '/ai-chat', label: 'AI Assistant', icon: FiMessageSquare },
   { path: '/style-recommend', label: 'Style Recommend', icon: FiDroplet },
   { path: '/viral-score', label: 'Viral Score', icon: FiTrendingUp },
+  { path: '/custom-views', label: 'Video Views', icon: FiBarChart2 },
   { path: '/settings', label: 'Settings', icon: FiSettings },
 ];
 
@@ -127,6 +129,7 @@ export default function App() {
         <Route path="/ai-chat" element={<ProtectedRoute><AIChatPage /></ProtectedRoute>} />
         <Route path="/style-recommend" element={<ProtectedRoute><StyleRecommendPage /></ProtectedRoute>} />
         <Route path="/viral-score" element={<ProtectedRoute><ViralScorePage /></ProtectedRoute>} />
+        <Route path="/custom-views" element={<ProtectedRoute><CustomViewsPage /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
       {/* // === Batch 08 Gaps & Frontend Mounts === */}
       <Route path="/cf-style-recommendation-engine-by-brand-industry-content-type" element={<ProtectedRoute><CfStyleRecommendationEngineByBrandIndustryContent /></ProtectedRoute>} />

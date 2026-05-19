@@ -79,6 +79,15 @@ app.use('/api/gap-no-direct-publish-to-platform-integration-youtube-tiktok', req
 app.use('/api/gap-no-webhooks-for-render-complete-events', require('./routes/gapNoWebhooksForRenderCompleteEvents'));
 app.use('/api/gap-no-notifications-subsystem', require('./routes/gapNoNotificationsSubsystem'));
 
+// Custom Views (mounted BEFORE 404 handler)
+app.use('/api/custom-views', require('./routes/customViews'));
+
+// Health
+app.get('/api/health', (req, res) => res.json({ status: 'ok', ts: Date.now() }));
+
+// 404 handler
+app.use('/api', (req, res) => res.status(404).json({ error: 'Not found', path: req.originalUrl }));
+
 app.listen(PORT, () => {
   console.log(`AI Video Generation Backend running on port ${PORT}`);
 });
