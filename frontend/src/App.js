@@ -25,6 +25,11 @@ import ViralScorePage from './pages/ViralScorePage';
 import CustomViewsPage from './pages/CustomViewsPage';
 
 import { FiFilm, FiType, FiImage, FiGrid, FiLayers, FiVideo, FiFolder, FiShuffle, FiMusic, FiDroplet, FiClock, FiDownload, FiEdit3, FiSettings, FiHome, FiLogOut, FiMenu, FiMessageSquare, FiTrendingUp, FiBarChart2 } from 'react-icons/fi';
+import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
+import CodexOperationsFeature from './pages/CodexOperationsFeature';
+
+import TimelineView from './pages/TimelineView';
+
 // === Batch 08 Gaps & Frontend Mounts ===
 import CfStyleRecommendationEngineByBrandIndustryContent from './pages/CfStyleRecommendationEngineByBrandIndustryContent'
 import CfMusicGenerationMatchingVideoPacingAndTone from './pages/CfMusicGenerationMatchingVideoPacingAndTone'
@@ -111,6 +116,10 @@ export default function App() {
     <Router>
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
       <Routes>
+        <Route path="/insights/timeline" element={<ProtectedRoute><TimelineView /></ProtectedRoute>} />
+        <Route path="/codex/custom-viz" element={<ProtectedRoute><CodexCustomVizFeature /></ProtectedRoute>} />
+        <Route path="/codex/operations" element={<ProtectedRoute><CodexOperationsFeature /></ProtectedRoute>} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
