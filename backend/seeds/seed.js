@@ -10,13 +10,15 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || 'postgres',
 });
 
+if(process.env.ALLOW_DESTRUCTIVE_DEMO_SEED!=='true'){console.error('Refusing destructive demo seed; set ALLOW_DESTRUCTIVE_DEMO_SEED=true only for an isolated disposable database.');process.exit(2);}
 async function seed() {
   console.log('Seeding database...');
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, password_hash VARCHAR(255) NOT NULL,
-      name VARCHAR(255), role VARCHAR(50) DEFAULT 'admin', created_at TIMESTAMP DEFAULT NOW()
+      name VARCHAR(255), role VARCHAR(50) DEFAULT 'admin', tenant_id TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
     );
     CREATE TABLE IF NOT EXISTS video_projects (
       id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, description TEXT, resolution VARCHAR(50) DEFAULT '1920x1080',
@@ -109,9 +111,15 @@ async function seed() {
   `);
 
   // Users
-  const hash = await bcrypt.hash('admin123', 10);
+  const demoEmail = process.env.SEED_ADMIN_EMAIL || process.env.DEMO_EMAIL;
+  const demoPassword = process.env.SEED_ADMIN_PASSWORD || process.env.DEMO_PASSWORD;
+  const tenantId = process.env.SEED_TENANT_ID || process.env.GOVERNANCE_TENANT_ID;
+  if (!demoEmail || !demoPassword || demoPassword.length < 12 || !tenantId) {
+    throw new Error('SEED_ADMIN_EMAIL, a 12+ character SEED_ADMIN_PASSWORD, and SEED_TENANT_ID are required');
+  }
+  const hash = await bcrypt.hash(demoPassword, 12);
   await pool.query('DELETE FROM users');
-  await pool.query('INSERT INTO users (email, password_hash, name, role) VALUES ($1,$2,$3,$4)', ['admin@aivideo.com', hash, 'Admin User', 'admin']);
+  await pool.query('INSERT INTO users (email, password_hash, name, role, tenant_id) VALUES ($1,$2,$3,$4,$5)', [demoEmail, hash, 'Admin User', 'admin', tenantId]);
 
   // Video Projects (15)
   await pool.query('DELETE FROM video_projects');

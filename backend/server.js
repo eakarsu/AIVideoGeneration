@@ -4,12 +4,17 @@ require('dotenv').config({ path: '../.env' });
 
 const app = express();
 const PORT = process.env.BACKEND_PORT || 3001;
+const auth = require('./middleware/auth');
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// Routes
+app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api', auth);
+app.use('/api/media-workflow', require('./routes/mediaWorkflow'));
+app.use(/^\/api\/(?:ai(?:\/|$)|gap-|integrations?(?:\/|$)|webhooks?(?:\/|$)|style-recommendation|music-generation|voice-over-synthesis|video-editing-suggestions|viral-score-prediction|collaboration-layer)/, (_req,res)=>res.status(503).json({error:'generated/direct-provider endpoints are quarantined; use media-workflow deliveries'}));
+// Routes
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/text2video', require('./routes/text2video'));
 app.use('/api/img2video', require('./routes/img2video'));
@@ -82,12 +87,7 @@ app.use('/api/gap-no-notifications-subsystem', require('./routes/gapNoNotificati
 // Custom Views (mounted BEFORE 404 handler)
 app.use('/api/custom-views', require('./routes/customViews'));
 
-// Health
-app.get('/api/health', (req, res) => res.json({ status: 'ok', ts: Date.now() }));
-
 // 404 handler
 app.use('/api', (req, res) => res.status(404).json({ error: 'Not found', path: req.originalUrl }));
 
-app.listen(PORT, () => {
-  console.log(`AI Video Generation Backend running on port ${PORT}`);
-});
+async function start(){try{const ready=await pool.query("SELECT to_regclass('public.media_workflows') AS workflow, to_regclass('public.media_workflow_audit') AS audit");if(!ready.rows[0].workflow||!ready.rows[0].audit)throw new Error('database migrations are pending; run npm run migrate');app.listen(PORT,()=>console.log(`AI Video Generation Backend running on port ${PORT}`));}catch(e){console.error('[startup] schema readiness failed:',e.message);process.exit(1);}}start();
