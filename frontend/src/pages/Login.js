@@ -9,7 +9,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fillCredentials = () => { setEmail('admin@aivideo.com'); setPassword('admin123'); };
+  const fillCredentials = () => { setEmail(process.env.REACT_APP_DEMO_EMAIL || ''); setPassword(process.env.REACT_APP_DEMO_PASSWORD || ''); };
 
   const handleLogin = async (e) => {
     e.preventDefault();
