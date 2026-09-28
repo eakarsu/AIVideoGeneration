@@ -29,7 +29,7 @@ export default function Login() {
       <div className="login-card">
         <h1 className="login-title">AI Video Studio</h1>
         <p className="login-subtitle">Sora-style AI Video Generation Platform</p>
-        <button className="fill-btn" onClick={fillCredentials}>Click to fill demo credentials</button>
+        <button className="fill-btn" onClick={fillCredentials}>Auto Fill Demo Credentials</button>
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label className="form-label">Email</label>
