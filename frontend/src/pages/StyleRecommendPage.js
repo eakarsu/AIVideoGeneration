@@ -1,3 +1,6 @@
+
+import FullAIExamples, { useFullAIExamples } from "../components/FullAIExamples.jsx";
+import FormattedAIReport from "../components/FormattedAIReport";
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiDroplet, FiZap } from 'react-icons/fi';
@@ -5,6 +8,8 @@ import ReactMarkdown from 'react-markdown';
 import api from '../services/api';
 
 export default function StyleRecommendPage() {
+  const fullAIExamples = useFullAIExamples();
+
   const [form, setForm] = useState({
     brand: '',
     industry: '',
@@ -43,23 +48,23 @@ export default function StyleRecommendPage() {
       </div>
 
       <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-        <form onSubmit={submit}>
+        <form onSubmit={submit} data-full-ai-workspace="StyleRecommendPage"><FullAIExamples controller={fullAIExamples} disabled={Boolean(loading)} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 12 }}>
             <div className="form-group">
               <label>Brand</label>
-              <input value={form.brand} onChange={set('brand')} placeholder="e.g. Acme Coffee" />
+              <input value={form.brand} onChange={set('brand')} placeholder="e.g. Acme Coffee" data-full-ai-field={fullAIExamples.bind({ current: form.brand, change: set('brand'), label: "form.brand", manual: false, json: false, sample: ['Harbor Coffee', 'Northline Running', 'Willow Home'] }, "p1-1712", undefined)} />
             </div>
             <div className="form-group">
               <label>Industry</label>
-              <input value={form.industry} onChange={set('industry')} placeholder="e.g. specialty beverage" />
+              <input value={form.industry} onChange={set('industry')} placeholder="e.g. specialty beverage" data-full-ai-field={fullAIExamples.bind({ current: form.industry, change: set('industry'), label: "form.industry", manual: false, json: false, sample: ['Specialty coffee', 'Athletic apparel', 'Home furnishings'] }, "p1-1908", undefined)} />
             </div>
             <div className="form-group">
               <label>Audience</label>
-              <input value={form.audience} onChange={set('audience')} placeholder="e.g. urban millennials" />
+              <input value={form.audience} onChange={set('audience')} placeholder="e.g. urban millennials" data-full-ai-field={fullAIExamples.bind({ current: form.audience, change: set('audience'), label: "form.audience", manual: false, json: false, sample: ['Neighborhood coffee customers', 'Recreational runners', 'First-time homeowners'] }, "p1-2117", undefined)} />
             </div>
             <div className="form-group">
               <label>Mood</label>
-              <select value={form.mood} onChange={set('mood')}>
+              <select value={form.mood} onChange={set('mood')} data-full-ai-field={fullAIExamples.bind({ current: form.mood, change: set('mood'), label: "form.mood", manual: false, json: false, sample: 'cinematic' }, "p1-2321", undefined)}>
                 <option value="cinematic">Cinematic</option>
                 <option value="energetic">Energetic</option>
                 <option value="dreamy">Dreamy</option>
@@ -83,11 +88,7 @@ export default function StyleRecommendPage() {
         <div className="ai-response">
           <div className="ai-response-header"><strong>Style Recommendation</strong></div>
           <div className="ai-response-body">
-            {typeof (result.result || result.recommendation || result.message) === 'string' ? (
-              <ReactMarkdown>{result.result || result.recommendation || result.message}</ReactMarkdown>
-            ) : (
-              <pre style={{ whiteSpace: 'pre-wrap', fontSize: 13 }}>{JSON.stringify(result, null, 2)}</pre>
-            )}
+            <FormattedAIReport response={result} />
           </div>
         </div>
       )}

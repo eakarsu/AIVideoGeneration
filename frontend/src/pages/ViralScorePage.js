@@ -1,3 +1,6 @@
+
+import FullAIExamples, { useFullAIExamples } from "../components/FullAIExamples.jsx";
+import FormattedAIReport from "../components/FormattedAIReport";
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiTrendingUp, FiZap } from 'react-icons/fi';
@@ -5,6 +8,8 @@ import ReactMarkdown from 'react-markdown';
 import api from '../services/api';
 
 export default function ViralScorePage() {
+  const fullAIExamples = useFullAIExamples();
+
   const [form, setForm] = useState({
     concept: '',
     platform: 'tiktok',
@@ -45,16 +50,16 @@ export default function ViralScorePage() {
       </div>
 
       <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-        <form onSubmit={submit}>
+        <form onSubmit={submit} data-full-ai-workspace="ViralScorePage"><FullAIExamples controller={fullAIExamples} disabled={Boolean(loading)} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 12 }}>
             <div className="form-group" style={{ gridColumn: '1 / -1' }}>
               <label>Concept *</label>
               <textarea rows="3" value={form.concept} onChange={set('concept')} required
-                placeholder="Describe the video concept, hook, and key beats" />
+                placeholder="Describe the video concept, hook, and key beats" data-full-ai-field={fullAIExamples.bind({ current: form.concept, change: set('concept'), label: "form.concept", manual: false, json: false, sample: ['A 30-second behind-the-scenes coffee roasting clip with a close-up opening and a final cup reveal.', 'A short running shoe comparison showing grip on wet pavement, followed by a clear takeaway.', 'A compact before-and-after room styling video with three affordable changes and a final reveal.'] }, "p1-1823", undefined)} />
             </div>
             <div className="form-group">
               <label>Platform</label>
-              <select value={form.platform} onChange={set('platform')}>
+              <select value={form.platform} onChange={set('platform')} data-full-ai-field={fullAIExamples.bind({ current: form.platform, change: set('platform'), label: "form.platform", manual: false, json: false, sample: 'tiktok' }, "p1-2091", undefined)}>
                 <option value="tiktok">TikTok</option>
                 <option value="instagram">Instagram Reels</option>
                 <option value="youtube">YouTube Shorts</option>
@@ -62,11 +67,11 @@ export default function ViralScorePage() {
             </div>
             <div className="form-group">
               <label>Audience</label>
-              <input value={form.audience} onChange={set('audience')} placeholder="e.g. Gen Z fashion" />
+              <input value={form.audience} onChange={set('audience')} placeholder="e.g. Gen Z fashion" data-full-ai-field={fullAIExamples.bind({ current: form.audience, change: set('audience'), label: "form.audience", manual: false, json: false, sample: ['Specialty coffee fans', 'Recreational runners', 'Budget-conscious renters'] }, "p1-2471", undefined)} />
             </div>
             <div className="form-group">
               <label>Duration</label>
-              <input value={form.duration} onChange={set('duration')} placeholder="e.g. 30 seconds" />
+              <input value={form.duration} onChange={set('duration')} placeholder="e.g. 30 seconds" data-full-ai-field={fullAIExamples.bind({ current: form.duration, change: set('duration'), label: "form.duration", manual: false, json: false, sample: '30 seconds' }, "p1-2675", undefined)} />
             </div>
           </div>
           <div style={{ marginTop: 12 }}>
@@ -88,11 +93,7 @@ export default function ViralScorePage() {
             )}
           </div>
           <div className="ai-response-body">
-            {typeof (result.result || result.analysis || result.message) === 'string' ? (
-              <ReactMarkdown>{result.result || result.analysis || result.message}</ReactMarkdown>
-            ) : (
-              <pre style={{ whiteSpace: 'pre-wrap', fontSize: 13 }}>{JSON.stringify(result, null, 2)}</pre>
-            )}
+            <FormattedAIReport response={result} />
           </div>
         </div>
       )}

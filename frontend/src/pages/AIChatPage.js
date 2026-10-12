@@ -1,8 +1,12 @@
+
+import FullAIExamples, { useFullAIExamples } from "../components/FullAIExamples.jsx";
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { FiSend, FiPlus, FiTrash2, FiCpu, FiMessageSquare, FiFilm, FiLayers, FiEdit3, FiZap } from 'react-icons/fi';
 import ReactMarkdown from 'react-markdown';
+import AIResultView from '../components/AIResultView';
 import api from '../services/api';
+import { recordList } from '../services/recordList';
 
 const AI_TOOLS = [
   { id: 'chat', label: 'Chat', icon: FiMessageSquare, desc: 'General video production assistant', endpoint: '/ai/chat' },
@@ -13,6 +17,8 @@ const AI_TOOLS = [
 ];
 
 export default function AIChatPage() {
+  const fullAIExamples = useFullAIExamples();
+
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -25,14 +31,15 @@ export default function AIChatPage() {
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   const loadConversations = async () => {
-    try { setConversations((await api.get('/ai/conversations')).data); } catch {}
+    try { setConversations(recordList((await api.get('/ai/conversations')).data)); }
+    catch (error) { toast.error(error.message || 'Failed to load conversations'); }
   };
 
   const loadConversation = async (conv) => {
     try {
       const { data } = await api.get(`/ai/conversations/${conv.id}`);
       setActiveConv(data);
-      setMessages(data.messages || []);
+      setMessages(recordList(data.messages ?? []));
     } catch { toast.error('Failed to load'); }
   };
 
@@ -104,7 +111,7 @@ export default function AIChatPage() {
   };
 
   return (
-    <div>
+    <div data-full-ai-workspace="AIChatPage"><FullAIExamples controller={fullAIExamples} disabled={Boolean(loading)} />
       <div className="page-header">
         <div><h1 className="page-title">AI Assistant</h1><p className="page-subtitle">AI-powered video production tools via OpenRouter</p></div>
       </div>
@@ -174,7 +181,7 @@ export default function AIChatPage() {
                         </div>
                       )}
                       <div className="ai-response-body">
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                        <AIResultView response={msg.content} title={msg.tool || 'AI assistant response'} model={msg.model} tokens={msg.usage} />
                       </div>
                       {msg.usage && (
                         <div className="ai-usage">
@@ -205,7 +212,7 @@ export default function AIChatPage() {
           <div className="chat-input-area">
             <input className="chat-input" value={input} onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-              placeholder={placeholders[activeTool]} disabled={loading} />
+              placeholder={placeholders[activeTool]} disabled={loading} data-full-ai-field={fullAIExamples.bind({ current: input, change: e => setInput(e.target.value), label: "input", manual: false, json: false, sample: ['Create a four-second cinematic video prompt for a quiet beach at sunrise, with a slow camera move and natural light.', 'Outline a five-scene storyboard for a reusable water bottle launch, including shots, transitions, and timing.', 'Review this short video concept: a city street after rain, neon reflections, and a slow tracking shot. Suggest clearer visual direction.'] }, "p1-9841", undefined)} />
             <button className="chat-send" onClick={handleSend} disabled={loading || !input.trim()}>
               <FiSend size={16} />
             </button>

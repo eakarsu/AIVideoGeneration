@@ -5,9 +5,8 @@ const pool = require('../db');
 const router = express.Router();
 const { jwtSecret } = require('../config/security');
 
-router.post('/login', async (req, res) => {
+const authenticate = async (email, password, res) => {
   try {
-    const { email, password } = req.body;
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
     const user = result.rows[0];
@@ -19,6 +18,18 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+router.post('/login', async (req, res) => {
+  await authenticate(req.body.email, req.body.password, res);
+});
+
+router.post('/demo-login', async (_req, res) => {
+  const email = process.env.DEMO_EMAIL;
+  const password = process.env.DEMO_PASSWORD;
+  if (!email || !password) return res.status(503).json({ error: 'Demo account is not configured' });
+  // The configured credentials must still match an existing account.
+  await authenticate(email, password, res);
 });
 
 router.get('/me', require('../middleware/auth'), async (req, res) => {

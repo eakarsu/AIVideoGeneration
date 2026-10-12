@@ -9,7 +9,21 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fillCredentials = () => { setEmail(process.env.REACT_APP_DEMO_EMAIL || ''); setPassword(process.env.REACT_APP_DEMO_PASSWORD || ''); };
+  const demoEmail = process.env.REACT_APP_DEMO_EMAIL || '';
+  const demoPassword = process.env.REACT_APP_DEMO_PASSWORD || '';
+  const demoAvailable = Boolean(demoEmail && demoPassword);
+  const fillCredentials = () => { if (demoAvailable) { setEmail(demoEmail); setPassword(demoPassword); } };
+
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.post('/auth/demo-login');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate('/');
+    } catch (err) { toast.error(err.response?.data?.error || 'Demo login is unavailable'); }
+    finally { setLoading(false); }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,7 +43,7 @@ export default function Login() {
       <div className="login-card">
         <h1 className="login-title">AI Video Studio</h1>
         <p className="login-subtitle">Sora-style AI Video Generation Platform</p>
-        <button className="fill-btn" onClick={fillCredentials}>Auto Fill Demo Credentials</button>
+        {demoAvailable ? <button className="fill-btn" type="button" onClick={fillCredentials}>Fill Demo Credentials</button> : <button className="fill-btn" type="button" onClick={handleDemoLogin} disabled={loading}>Demo Login</button>}
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label className="form-label">Email</label>

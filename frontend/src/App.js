@@ -1,3 +1,4 @@
+import AIReportLibrary from "./components/AIReportLibrary";
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -113,7 +114,7 @@ function ProtectedRoute({ children }) {
 
 export default function App() {
   return (
-    <Router>
+    <><AIReportLibrary floating /><Router>
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
       <Routes>
         <Route path="/insights/timeline" element={<ProtectedRoute><TimelineView /></ProtectedRoute>} />
@@ -157,6 +158,6 @@ export default function App() {
       <Route path="/gap-no-webhooks-for-render-complete-events" element={<ProtectedRoute><GapNoWebhooksForRenderCompleteEvents /></ProtectedRoute>} />
       <Route path="/gap-no-notifications-subsystem" element={<ProtectedRoute><GapNoNotificationsSubsystem /></ProtectedRoute>} />
       </Routes>
-    </Router>
+    </Router></>
   );
 }

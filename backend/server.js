@@ -13,6 +13,14 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Dat
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', auth);
 app.use('/api/media-workflow', require('./routes/mediaWorkflow'));
+
+// Advisory AI reports only; native execution and approval routes stay unchanged.
+const aiWorkspaceSupport = require("./aiWorkspaceAdapters.cjs");
+const aiWorkspaceDatabase = require("./db.js");
+app.use('/api/report-workspace', require("./aiWorkspace.cjs").createAIWorkspaceRouter({
+  pool: aiWorkspaceDatabase, authenticateToken: require("./middleware/auth.js"),
+  aiRateLimiter: aiWorkspaceSupport.createWorkspaceLimiter(), features: require("./aiWorkspaceFeatures.json"),
+}));
 app.use(/^\/api\/(?:ai(?:\/|$)|gap-|integrations?(?:\/|$)|webhooks?(?:\/|$)|style-recommendation|music-generation|voice-over-synthesis|video-editing-suggestions|viral-score-prediction|collaboration-layer)/, (_req,res)=>res.status(503).json({error:'generated/direct-provider endpoints are quarantined; use media-workflow deliveries'}));
 // Routes
 app.use('/api/projects', require('./routes/projects'));

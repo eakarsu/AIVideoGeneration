@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
+import { recordList } from '../services/recordList';
 
 export default function VideoBriefPdf() {
   const [projects, setProjects] = useState([]);
@@ -11,10 +12,11 @@ export default function VideoBriefPdf() {
   useEffect(() => {
     api.get('/projects')
       .then(r => {
-        setProjects(r.data);
-        if (r.data.length > 0) setProjectId(String(r.data[0].id));
+        const projects = recordList(r.data);
+        setProjects(projects);
+        if (projects.length > 0) setProjectId(String(projects[0].id));
       })
-      .catch(e => setErr(e.response?.data?.error || 'Failed to load projects'));
+      .catch(e => setErr(e.response?.data?.error || e.message || 'Failed to load projects'));
   }, []);
 
   const generate = async () => {

@@ -8,8 +8,8 @@ export default function StyleHeatmap() {
 
   useEffect(() => {
     api.get('/custom-views/style-heatmap')
-      .then(r => setData(r.data))
-      .catch(e => setErr(e.response?.data?.error || 'Failed to load heatmap'))
+      .then(r => { const value = r.data; if (!Array.isArray(value?.styles) || !Array.isArray(value?.models) || !Array.isArray(value?.cells)) throw new TypeError('The heatmap endpoint returned invalid data'); setData(value); })
+      .catch(e => setErr(e.response?.data?.error || e.message || 'Failed to load heatmap'))
       .finally(() => setLoading(false));
   }, []);
 

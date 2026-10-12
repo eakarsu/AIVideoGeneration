@@ -16,8 +16,8 @@ export default function RenderTimeline() {
 
   useEffect(() => {
     api.get('/custom-views/render-timeline')
-      .then(r => setData(r.data))
-      .catch(e => setErr(e.response?.data?.error || 'Failed to load timeline'))
+      .then(r => { if (!Array.isArray(r.data?.items)) throw new TypeError('The timeline endpoint returned invalid data'); setData(r.data); })
+      .catch(e => setErr(e.response?.data?.error || e.message || 'Failed to load timeline'))
       .finally(() => setLoading(false));
   }, []);
 

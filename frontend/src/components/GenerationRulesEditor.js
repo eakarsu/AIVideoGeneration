@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
+import { recordList } from '../services/recordList';
 
 const blankForm = { name: '', resolution: '1920x1080', length_seconds: 30, max_size_mb: 100, format: 'mp4', notes: '' };
 
@@ -13,8 +14,8 @@ export default function GenerationRulesEditor() {
   const load = () => {
     setLoading(true);
     api.get('/custom-views/rules')
-      .then(r => setRules(r.data))
-      .catch(e => setErr(e.response?.data?.error || 'Failed to load rules'))
+      .then(r => { setRules(recordList(r.data)); setErr(null); })
+      .catch(e => setErr(e.response?.data?.error || e.message || 'Failed to load rules'))
       .finally(() => setLoading(false));
   };
 
