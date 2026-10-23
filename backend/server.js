@@ -13,6 +13,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Dat
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', auth);
 app.use('/api/media-workflow', require('./routes/mediaWorkflow'));
+app.use('/api/featurepack', require('./featurepack').createFeaturePackRouter({ listRecords: async () => (await require('./db').query('SELECT * FROM video_projects ORDER BY created_at DESC LIMIT 200')).rows }));
 
 // Advisory AI reports only; native execution and approval routes stay unchanged.
 const aiWorkspaceSupport = require("./aiWorkspaceAdapters.cjs");
